@@ -1,3 +1,4 @@
+/*
 package com.leyou.filter;
 
 import com.leyou.auth.utils.JwtUtils;
@@ -16,16 +17,19 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+*/
 /**
  * @Author: 98050
  * @Time: 2018-10-24 16:21
  * @Feature: 登录拦截器
- */
-//@Component
-//@EnableConfigurationProperties({JwtProperties.class,FilterProperties.class})
-public class LoginFilter  {   //extends ZuulFilter
+ *//*
 
-   /* @Autowired
+@Component
+@EnableConfigurationProperties({JwtProperties.class,FilterProperties.class})
+public class LoginFilter  {
+    extends ZuulFilter
+
+    @Autowired
     private JwtProperties properties;
 
     @Autowired
@@ -89,5 +93,6 @@ public class LoginFilter  {   //extends ZuulFilter
             context.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
         }
         return null;
-    }*/
+    }
 }
+*/

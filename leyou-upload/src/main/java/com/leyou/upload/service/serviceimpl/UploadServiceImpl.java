@@ -1,7 +1,11 @@
 package com.leyou.upload.service.serviceimpl;
 
 import com.github.tobato.fastdfs.domain.StorePath;
+import com.github.tobato.fastdfs.domain.ThumbImageConfig;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
+import com.leyou.common.enums.ExceptionEnums;
+import com.leyou.common.exception.LeyouException;
+import com.leyou.config.UploadProperties;
 import com.leyou.upload.service.UploadService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,27 +16,28 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @Author: 98050
- * Time: 2018-08-09 14:44
- * Feature:
- */
 @Service
 public class UploadServiceImpl implements UploadService {
 
     @Autowired
     private FastFileStorageClient storageClient;
 
+    @Autowired
+    private ThumbImageConfig thumbImageConfig;
+
+//    @Autowired
+//    private UploadProperties properties;
+
     private static final Logger logger= LoggerFactory.getLogger(UploadServiceImpl.class);
 
     /**
      *     支持上传的文件类型
      */
-    private static final List<String> suffixes = Arrays.asList("image/png","image/jpeg","image/jpg");
-
+    private static final List<String> ALLOW_TYPES = Arrays.asList("image/png","image/jpeg","image/jpg");
 
     @Override
     public String upload(MultipartFile file) {
@@ -47,31 +52,31 @@ public class UploadServiceImpl implements UploadService {
          */
         try {
             String type = file.getContentType();
-            if (!suffixes.contains(type)) {
+            if (!ALLOW_TYPES.contains(type)) {
+//            if (!properties.getAllowTypes().contains(type)) {
                 logger.info("上传文件失败，文件类型不匹配：{}", type);
-                return null;
+                throw new LeyouException(ExceptionEnums.INVALID_FILE_TYPE);
             }
             BufferedImage image = ImageIO.read(file.getInputStream());
             if (image == null) {
                 logger.info("上传失败，文件内容不符合要求");
-                return null;
+                throw new LeyouException(ExceptionEnums.INVALID_FILE_TYPE);
             }
 
-//            File dir = new File("G:\\LeYou\\upload");
-//            if (!dir.exists()){
-//                dir.mkdirs();
-//            }
-//            file.transferTo(new File(dir, Objects.requireNonNull(file.getOriginalFilename())));
+//            File dest = new File("D:\\BOS",file.getOriginalFilename());
+//            file.transferTo(dest);
+//            return "http://image.leyou.com/" + file.getOriginalFilename();
 
-            StorePath storePath = this.storageClient.uploadFile(
+            StorePath storePath = this.storageClient.uploadImageAndCrtThumbImage(
                   file.getInputStream(), file.getSize(), getExtension(file.getOriginalFilename()), null);
+            String path = thumbImageConfig.getThumbImagePath(storePath.getPath());
+            String url = "http://image.leyou.com/"+path;
 
-            //String url = "http://image.leyou.com/upload/"+file.getOriginalFilename();
-            String url = "http://image.leyou.com/"+storePath.getFullPath();
-//            System.out.println(url);
+//            String url = properties.getBaseUrl()+storePath.getFullPath();
             return url;
         }catch (Exception e){
-            return null;
+            logger.error("上传失败");
+            throw new LeyouException(ExceptionEnums.UPLOAD_FILE_ERROR);
         }
     }
 

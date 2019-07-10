@@ -26,7 +26,7 @@ public class FdfsTest {
 
     @Test
     public void testUpload() throws FileNotFoundException {
-        File file = new File("G:\\LeYou\\upload\\spitter_logo_50.png");
+        File file = new File("D:\\Users\\ToughChow\\Pictures\\banner.jpg");
         // 上传
         StorePath storePath = this.storageClient.uploadFile(
                 new FileInputStream(file), file.length(), "png", null);
@@ -38,7 +38,7 @@ public class FdfsTest {
 
     @Test
     public void testUploadAndCreateThumb() throws FileNotFoundException {
-        File file = new File("G:\\LeYou\\upload\\spitter_logo_50.png");
+        File file = new File("D:\\Users\\ToughChow\\Pictures\\banner.jpg");
         // 上传并且生成缩略图
         StorePath storePath = this.storageClient.uploadImageAndCrtThumbImage(
                 new FileInputStream(file), file.length(), "png", null);
@@ -47,7 +47,7 @@ public class FdfsTest {
         // 不带分组的路径
         System.out.println(storePath.getPath());
         // 获取缩略图路径
-        String path = thumbImageConfig.getThumbImagePath(storePath.getPath());
-        System.out.println(path);
+//        String path = thumbImageConfig.getThumbImagePath(storePath.getPath());
+//        System.out.println(path);
     }
 }

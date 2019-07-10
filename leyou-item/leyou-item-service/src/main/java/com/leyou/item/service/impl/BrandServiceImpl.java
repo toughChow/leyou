@@ -2,11 +2,14 @@ package com.leyou.item.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.leyou.common.enums.ExceptionEnums;
+import com.leyou.common.exception.LeyouException;
 import com.leyou.common.pojo.PageResult;
 import com.leyou.item.mapper.BrandMapper;
 import com.leyou.item.pojo.Brand;
 import com.leyou.item.service.BrandService;
 import com.leyou.parameter.pojo.BrandQueryByPageParameter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import java.util.List;
  * Time: 2018-08-07 19:16
  * Feature: 分类的业务层
  */
+@Slf4j
 @Service
 public class BrandServiceImpl implements BrandService {
 
@@ -72,12 +76,17 @@ public class BrandServiceImpl implements BrandService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveBrand(Brand brand, List<Long> categories) {
-        System.out.println(brand);
+        log.info("{}",brand);
         // 新增品牌信息
-        this.brandMapper.insertSelective(brand);
+        int count = this.brandMapper.insertSelective(brand);
+        if (count != 1)
+            throw new LeyouException(ExceptionEnums.BRAND_SAVE_ERROR);
+
         // 新增品牌和分类中间表
         for (Long cid : categories) {
-            this.brandMapper.insertCategoryBrand(cid, brand.getId());
+            count = this.brandMapper.insertCategoryBrand(cid, brand.getId());
+            if (count != 1)
+                throw new LeyouException(ExceptionEnums.BRAND_SAVE_ERROR);
         }
     }
 

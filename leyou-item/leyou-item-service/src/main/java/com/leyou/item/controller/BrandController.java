@@ -4,6 +4,7 @@ import com.leyou.common.pojo.PageResult;
 import com.leyou.parameter.pojo.BrandQueryByPageParameter;
 import com.leyou.item.pojo.Brand;
 import com.leyou.item.service.BrandService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,9 @@ public class BrandController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<Void>  saveBrand(Brand brand, @RequestParam("categories") List<Long> categories){
+    public ResponseEntity<Void>  saveBrand(Brand brand,
+                                           @RequestParam("categories") List<Long> categories){
+
         this.brandService.saveBrand(brand, categories);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -64,7 +67,10 @@ public class BrandController {
      * @return
      */
     @PutMapping
-    public ResponseEntity<Void> updateBrand(Brand brand,@RequestParam("categories") List<Long> categories){
+    public ResponseEntity<Void> updateBrand(Brand brand,@RequestParam("categories")List<Long> categories){
+        System.out.println(666666);
+        System.out.println(brand);
+        System.out.println(categories);
         this.brandService.updateBrand(brand,categories);
         return  ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

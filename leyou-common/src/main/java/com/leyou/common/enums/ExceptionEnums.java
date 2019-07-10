@@ -13,8 +13,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExceptionEnums {
+public enum ExceptionEnums {
 
+    CATEGORY_NOT_FIND(404, "商品分类没查到"),
+    BRAND_SAVE_ERROR(500, "新增品牌失败"),
+    INVALID_FILE_TYPE(400, "无效文件类型"),
+    UPLOAD_FILE_ERROR(500, "文件上传失败"),
+    ;
     private int code;
     private String msg;
 

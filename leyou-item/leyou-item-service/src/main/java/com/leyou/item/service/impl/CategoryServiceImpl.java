@@ -1,10 +1,13 @@
 package com.leyou.item.service.impl;
 
+import com.leyou.common.enums.ExceptionEnums;
+import com.leyou.common.exception.LeyouException;
 import com.leyou.item.pojo.Category;
 import com.leyou.item.mapper.CategoryMapper;
 import com.leyou.item.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
@@ -31,7 +34,11 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> queryCategoryByPid(Long pid) {
         Category t=new Category();
         t.setParentId(pid);
-        return this.categoryMapper.select(t);
+        List<Category> list = this.categoryMapper.select(t);
+        if (CollectionUtils.isEmpty(list)) {
+            throw new LeyouException(ExceptionEnums.CATEGORY_NOT_FIND);
+        }
+        return list;
     }
 
     /**
