@@ -5,7 +5,6 @@ import com.github.tobato.fastdfs.domain.ThumbImageConfig;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.leyou.common.enums.ExceptionEnums;
 import com.leyou.common.exception.LeyouException;
-import com.leyou.config.UploadProperties;
 import com.leyou.upload.service.UploadService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -69,8 +67,12 @@ public class UploadServiceImpl implements UploadService {
 
             StorePath storePath = this.storageClient.uploadImageAndCrtThumbImage(
                   file.getInputStream(), file.getSize(), getExtension(file.getOriginalFilename()), null);
+
             String path = thumbImageConfig.getThumbImagePath(storePath.getPath());
             String url = "http://image.leyou.com/"+path;
+
+            logger.info("update file success : {}", url);
+            System.out.println("666" + url);
 
 //            String url = properties.getBaseUrl()+storePath.getFullPath();
             return url;

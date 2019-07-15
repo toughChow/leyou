@@ -24,7 +24,10 @@ fdfs:
     width: 60
     height: 60
   tracker-list: # tracker地址
-    - 192.168.1.124:22122
+    - 192.168.137.222:22122
+  pool:
+    max-total: 150         #从池中借出的对象的最大数目
+    max-wait-millis: 100   #获取连接时的最大等待毫秒数100
 leyou:
   upload:
     baseUrl: "http://image/leyou.com/"
